@@ -6,6 +6,13 @@
 [] redux
 [] firebase
 
+## order to build
+
+    1. cra
+    2. react-router-dom & firebase
+    3. auth
+    4.
+
 ### reference:
 
 - https://github.com/leedaeho1188/react_calendar_hh99
