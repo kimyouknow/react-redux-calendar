@@ -42,8 +42,8 @@ function Auth() {
                 provider.addScope("email");
             }
             const result = await fb_auth.signInWithPopup(provider);
-            const token = result.credential.accessToken;
-            const user = result.user;
+            // const token = result.credential.accessToken;
+            // const user = result.user;
         }
         catch (error){
             console.log(error)

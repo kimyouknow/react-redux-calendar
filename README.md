@@ -11,7 +11,8 @@
     1. cra
     2. react-router-dom & firebase
     3. auth
-    4.
+    4. user profile
+    5. rendering calendar
 
 ### reference:
 

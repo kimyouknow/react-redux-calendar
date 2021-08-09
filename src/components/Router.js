@@ -3,7 +3,8 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Redirect
+    Redirect,
+    Link
 } from "react-router-dom";
 import Home from "display/Home";
 import Auth from "display/Auth";
@@ -12,6 +13,18 @@ import Profile from "display/Profile";
 const AppRouter = ({isLoggedIn, userObj, refreshUser}) => {
     return(
         <Router>
+            {isLoggedIn && 
+                <nav>
+                    <ul>
+                        <li>
+                            <Link to="/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/profile">{userObj.displayName}'s Profile</Link>
+                        </li>
+                    </ul>
+                </nav>  
+            }
             <Switch>
                 {isLoggedIn ? 
                 <>

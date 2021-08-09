@@ -5,7 +5,7 @@ import AppRouter from "./Router";
 function App() {
   const [init, setInit] = useState(false);
   const [userObj, setUserObj] = useState(null);
-  console.log(userObj)
+  // console.log(userObj)
   useEffect(() => {
     fb_auth.onAuthStateChanged(user => {
       if(user) {
@@ -22,12 +22,14 @@ function App() {
           uid: user.uid,
           updateProfile: (args) => user.updateProfile(args)
         });
+      } else {
+        setUserObj(null);
       }
       setInit(true)
     });
   },[])
   const refreshUser = () => {
-    const user = fb_auth.currentUser;
+    const user = fb_auth.currentUser;  
     setUserObj({
       displayName: user.displayName,
       uid: user.uid,
