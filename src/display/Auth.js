@@ -41,7 +41,8 @@ function Auth() {
                 provider.addScope('profile');
                 provider.addScope("email");
             }
-            const result = await fb_auth.signInWithPopup(provider);
+            // const result = 
+            await fb_auth.signInWithPopup(provider);
             // const token = result.credential.accessToken;
             // const user = result.user;
         }
