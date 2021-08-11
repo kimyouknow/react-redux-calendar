@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { MdChevronLeft, MdChevronRight, } from "react-icons/md";
+// import { MdChevronLeft, MdChevronRight, } from "react-icons/md";
 
 const Header = styled.div`
     display: flex;
@@ -70,14 +70,6 @@ const ToDoContainer = styled.div`
     color: black;
     &:hover {
         background-color: rgba(223, 230, 233,1.0);
-        cursor: pointer;
-    }
-`;
-
-const ToDoElement = styled.div`
-    /* text-decoration: ${props => props.isCom ? "line-through" : "none"}; */
-    :hover{
-    -webkit-transform:scale(1.2);
     }
 `;
 
@@ -86,11 +78,9 @@ const CalendarPre = ({activeDate,
     handleLastMonth,
     handleNextMonth,
     handleToday,
-    onClick,
-    handleDel,
-    handleCom})  => {
+    onClick})  => {
     const weeks = ["SUN", "MON","TUE","WED","THU","FRI","SAT"];    
-    const {activeD,activeM,activeY} = activeDate;
+    const {activeM,activeY} = activeDate;
     return (
         <>
         <Header>
@@ -117,8 +107,6 @@ const CalendarPre = ({activeDate,
                     {date.schedules ? date.schedules.map((ele, idx) => 
                         <ToDoContainer key={idx}>
                             {ele.desc}
-                            <ToDoElement onClick={() => handleCom(ele.id)}>✅</ToDoElement>
-                            <ToDoElement onClick={() => handleDel(ele.id)}>❌</ToDoElement>
                         </ToDoContainer>
                     ): null}
                 </ToDoContainer>

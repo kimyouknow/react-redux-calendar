@@ -3,6 +3,7 @@ import React, {useState} from "react";
 import { connect } from "react-redux";
 import { addSchedule } from "_actions/calendar_actions";
 import styled from "styled-components";
+import Modal from "display/Modal";
 
 const PlanContainer = styled.div``;
 
@@ -13,11 +14,18 @@ const PlanLi = styled.li``;
 function Home({states, addSchedule}) {
   const {calendar: {activeD, activeM, activeY, schedules}} = states;
   const [planInput, setPlanInput] = useState("");
+  const [openModal, setOpenModal] = useState(false);
+  const [isAdd, setIsAdd] = useState(true);
   const onSubmitHandler = (e) => {
     e.preventDefault();
     const activeDate = new Date(activeY, activeM, activeD);
     addSchedule(activeDate, planInput);
     setPlanInput("")
+  }
+  const handleModal = (type) => {
+    console.log(openModal);
+    !openModal ? setOpenModal(true) : setOpenModal(false);
+    type === "add" ? setIsAdd(true) : setIsAdd(false);
   }
   return (
     <>
@@ -26,7 +34,7 @@ function Home({states, addSchedule}) {
           <label>Add to do</label>
           <input type="text" value={planInput} onChange={(e => setPlanInput(e.target.value))} />
           <span>{activeY}</span>/
-          <span>{activeM}</span>/ 
+          <span>{activeM+1}</span>/ 
           <span>{activeD}</span>
         </form>
         <PlanContainer>
@@ -40,9 +48,13 @@ function Home({states, addSchedule}) {
           }
           </PlanUl>
         </PlanContainer>
+        <button onClick={()=> handleModal("add")}>ADD</button>
+        <button onClick={()=> handleModal("edit")}>EDIT</button>
+        <Modal isAdd={isAdd} openModal={openModal} setOpenModal={setOpenModal} />
     </>
   );
 }
+
 function mapStateToProps(state, ownProps){
   return {states : state}
 }
