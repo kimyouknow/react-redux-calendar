@@ -1,10 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import {useDispatch} from "react-redux";
 import styled from "styled-components";
-import AddModal from "components/AddModal";
-import EditModal from "components/EditModal";
 import { connect } from "react-redux";
-import { addSchedule, comSchedule, delSchedule, setToday } from "_actions/calendar_actions";
-import { compareDate } from "components/Calendar/CalendarCon";
+import { addSchedule } from "_actions/calendar_actions";
 import Datepicker from "components/datePicker";
 
 const Container = styled.div`
@@ -28,22 +26,34 @@ const ModalWindow = styled.div`
     background-color: #fff;
 `;
 
-const Modal = ({states,setToday, addSchedule,isAdd, openModal, setOpenModal,delSchedule,comSchedule}) => {
-    const {calendar: {activeD, activeM, activeY, schedules}} = states;
+const Modal = ({states,openModal, setOpenModal}) => {
+    const {calendar: {activeD, activeM, activeY}} = states;
+    const dispatch = useDispatch();
     const activeDate = new Date(activeY, activeM, activeD);
-    const temp = schedules.filter(ele => compareDate(ele.date) === compareDate(activeDate));
+    const [title, setTitle] = useState("");
+    const [desc, setDesc] = useState("");
+    const onSubmitHandler = (e) => {
+        e.preventDefault();
+        dispatch(addSchedule(activeDate, title, desc));
+        setTitle("");
+        setDesc("")
+        setOpenModal(false);
+    }
+    // const temp = schedules.filter(ele => compareDate(ele.date) === compareDate(activeDate));
+    if (openModal){
+        window.addEventListener("keydown", (e) => e.keyCode === 27 ? setOpenModal(false): null);
+    }
     return (
         <Container show={openModal}>
             <ModalWindow>
                 <button onClick={() => setOpenModal(false)}>x</button>
-                <span>{activeY}</span>/
-                <span>{activeM+1}</span>/ 
-                <span>{activeD}</span>
-                <Datepicker setToday={setToday} />
-                {isAdd ?
-                    <AddModal setOpenModal={setOpenModal} activeDate={activeDate} addSchedule={addSchedule}/>: 
-                    <EditModal setOpenModal={setOpenModal} activeDate={activeDate} temp={temp} delSchedule={delSchedule} comSchedule={comSchedule} />
-                }
+                <Datepicker/>
+                <form onSubmit={(e => onSubmitHandler(e))}>
+                    <label>Add to do</label>
+                    <input type="text" name="title" value={title} onChange={(e => setTitle(e.target.value))} placeholder="Title" />
+                    <input type="text" name="desc" value={desc} onChange={(e => setDesc(e.target.value))} placeholder="Description" />
+                    <button type="submit">submit</button>
+                </form>
             </ModalWindow>
         </Container>
     )
@@ -53,14 +63,4 @@ function mapStateToProps(state, ownProps){
     return {states : state}
 }
 
-function mapDispatchToProps(dispatch, ownProps ){
-// console.log(ownProps);
-return {
-    addSchedule: (date, desc) => dispatch(addSchedule(date, desc)),
-    setToday: (date) => dispatch(setToday(date)),
-    delSchedule: (id) => dispatch(delSchedule(id)),
-    comSchedule: (id) => dispatch(comSchedule(id))
-}
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+export default connect(mapStateToProps, null)(Modal);

@@ -1,4 +1,5 @@
-import React from "react";
+import EditModal from "components/EditModal";
+import React, { useState } from "react";
 import styled from "styled-components";
 // import { MdChevronLeft, MdChevronRight, } from "react-icons/md";
 
@@ -81,6 +82,7 @@ const CalendarPre = ({activeDate,
     onClick})  => {
     const weeks = ["SUN", "MON","TUE","WED","THU","FRI","SAT"];    
     const {activeM,activeY} = activeDate;
+    const [activeInfo, setActiveInfo] = useState(null);
     return (
         <>
         <Header>
@@ -97,22 +99,26 @@ const CalendarPre = ({activeDate,
             {/* {console.log(dates)} */}
             {!dates ? <h1>Loading</h1> : 
             dates.map(date =>
-            <DateComponent key={date.date} 
-                onClick={() => onClick(date.date)}
-                isCur={date.isCur}
-                today={date.date.getDate() === new Date().getDate() && date.date.getMonth() === new Date().getMonth()}
-            >
+                <DateComponent key={date.date} 
+                    onClick={() => onClick(date.date)}
+                    isCur={date.isCur}
+                    today={date.date.getDate() === new Date().getDate() && date.date.getMonth() === new Date().getMonth()}
+                >
                 {date.date.getDate()}
                 <ToDoContainer>
                     {date.schedules ? date.schedules.map((ele, idx) => 
-                        <ToDoContainer key={idx}>
-                            {ele.desc}
+                        <ToDoContainer key={idx} onClick={()=> setActiveInfo(ele)}>
+                            {ele.title}
                         </ToDoContainer>
                     ): null}
                 </ToDoContainer>
             </DateComponent>)
         }
         </DateContainer>
+        {activeInfo && <EditModal 
+            activeInfo={activeInfo}
+            setActiveInfo={setActiveInfo}
+            />}
     </>
     );
 }
