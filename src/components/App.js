@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { loadSchedule } from "_actions/calendar_actions";
 import { fb_auth } from "../firebaseConfig";
 import AppRouter from "./Router";
 
 function App() {
+  const dispatch = useDispatch();
   const [init, setInit] = useState(false);
   const [userObj, setUserObj] = useState(null);
-  // console.log(userObj)
   useEffect(() => {
+    dispatch(loadSchedule());
     fb_auth.onAuthStateChanged(user => {
       if(user) {
         if(user.displayName === null){

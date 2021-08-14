@@ -74,15 +74,17 @@ const ToDoContainer = styled.div`
     }
 `;
 
-const CalendarPre = ({activeDate,
-    dates,
-    handleLastMonth,
-    handleNextMonth,
-    handleToday,
-    onClick})  => {
+const CalendarPre = ({activeDate, dates, activeS, handleLastMonth, handleNextMonth, handleToday})  => {
     const weeks = ["SUN", "MON","TUE","WED","THU","FRI","SAT"];    
     const {activeM,activeY} = activeDate;
     const [activeInfo, setActiveInfo] = useState(null);
+    const compareDate = (input) => {
+        const inputY = String(input.getFullYear());
+        const inputM = String(input.getMonth());
+        const inputD = String(input.getDate());
+        return inputY+inputM+inputD
+    }
+    const filterd = (date) => activeS.filter(obj => compareDate(obj.date) === compareDate(date.date))
     return (
         <>
         <Header>
@@ -100,13 +102,12 @@ const CalendarPre = ({activeDate,
             {!dates ? <h1>Loading</h1> : 
             dates.map(date =>
                 <DateComponent key={date.date} 
-                    onClick={() => onClick(date.date)}
                     isCur={date.isCur}
                     today={date.date.getDate() === new Date().getDate() && date.date.getMonth() === new Date().getMonth()}
                 >
                 {date.date.getDate()}
                 <ToDoContainer>
-                    {date.schedules ? date.schedules.map((ele, idx) => 
+                    {filterd(date) ? filterd(date).map((ele, idx) => 
                         <ToDoContainer key={idx} onClick={()=> setActiveInfo(ele)}>
                             {ele.title}
                         </ToDoContainer>
@@ -118,9 +119,13 @@ const CalendarPre = ({activeDate,
         {activeInfo && <EditModal 
             activeInfo={activeInfo}
             setActiveInfo={setActiveInfo}
-            />}
+        />}
     </>
     );
 }
 
 export default CalendarPre;
+
+
+// const {data:schedules} = await dispatch(loadSchedule());
+//         const i_schedule = schedules.filter((obj => compareDate(obj.date.toDate()) === compareDate(i_date)));

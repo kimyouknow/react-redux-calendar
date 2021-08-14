@@ -1,14 +1,17 @@
+import React, {useEffect, useState} from "react";
+// import styled from "styled-components";
 import Calendar from "components/Calendar/CalendarCon";
-import React, {useState} from "react";
-import { connect } from "react-redux";
-import { addSchedule } from "_actions/calendar_actions";
-import styled from "styled-components";
 import Modal from "display/Modal";
+// import { useDispatch } from "react-redux";
+// import { loadFB } from "_actions/calendar_actions";
 
-function Home({states, addSchedule}) {
-  const {calendar: {schedules}} = states;
+function Home() {
+  // const dispatch = useDispatch();
   const [openModal, setOpenModal] = useState(false);
   const handleModal = () => !openModal ? setOpenModal(true) : setOpenModal(false);
+  // useEffect(() => {
+  //   dispatch(loadFB())
+  // }, [])
   return (
     <>
         <Calendar />
@@ -18,15 +21,4 @@ function Home({states, addSchedule}) {
   );
 }
 
-function mapStateToProps(state, ownProps){
-  return {states : state}
-}
-
-function mapDispatchToProps(dispatch, ownProps ){
-  // console.log(ownProps);
-  return {
-    addSchedule: (date, desc) => dispatch(addSchedule(date, desc)),
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;

@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {useDispatch} from "react-redux";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import { addSchedule } from "_actions/calendar_actions";
-import Datepicker from "components/datePicker";
+import { addFB } from "_actions/calendar_actions";
 
 const Container = styled.div`
     display: ${props => props.show ? "flex" : "none"};
@@ -26,15 +24,21 @@ const ModalWindow = styled.div`
     background-color: #fff;
 `;
 
-const Modal = ({states,openModal, setOpenModal}) => {
-    const {calendar: {activeD, activeM, activeY}} = states;
+const Modal = ({openModal, setOpenModal}) => {
     const dispatch = useDispatch();
-    const activeDate = new Date(activeY, activeM, activeD);
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
+    const [activeDate, setActiveDate] = useState(new Date());
+    const onChangeHandler = (value) => {
+        const Y = Number(value.slice(0,4))
+        const M = Number(value.slice(5,7))-1
+        const D = Number(value.slice(8,10))
+        setActiveDate(new Date(Y,M,D));
+    }
     const onSubmitHandler = (e) => {
         e.preventDefault();
-        dispatch(addSchedule(activeDate, title, desc));
+        // console.log(activeDate)
+        dispatch(addFB(activeDate, title, desc));
         setTitle("");
         setDesc("")
         setOpenModal(false);
@@ -47,7 +51,7 @@ const Modal = ({states,openModal, setOpenModal}) => {
         <Container show={openModal}>
             <ModalWindow>
                 <button onClick={() => setOpenModal(false)}>x</button>
-                <Datepicker/>
+                <input type="date" onChange={(e) => onChangeHandler(e.target.value)} />
                 <form onSubmit={(e => onSubmitHandler(e))}>
                     <label>Add to do</label>
                     <input type="text" name="title" value={title} onChange={(e => setTitle(e.target.value))} placeholder="Title" />
@@ -58,9 +62,4 @@ const Modal = ({states,openModal, setOpenModal}) => {
         </Container>
     )
 }
-
-function mapStateToProps(state, ownProps){
-    return {states : state}
-}
-
-export default connect(mapStateToProps, null)(Modal);
+export default Modal;

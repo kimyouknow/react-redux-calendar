@@ -42,7 +42,7 @@ const ToDoElement = styled.div`
 const EditModal = ({activeInfo, setActiveInfo}) => {
     const dispatch = useDispatch();
     const {id, title, desc, date} = activeInfo;
-    const activeDate = new Date(date);
+    const activeDate = date.toDate();
     const [titleIp, setTitleIP] = useState(title);
     const [descIP, setDescIP] = useState(desc);
     const closeModal = () => {
