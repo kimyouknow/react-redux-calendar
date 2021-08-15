@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     BrowserRouter as Router,
     Switch,
@@ -8,30 +8,42 @@ import {
 import Home from "display/Home";
 import Auth from "display/Auth";
 import Profile from "display/Profile";
+import { useDispatch, useSelector } from "react-redux";
+import { loadSchedule } from "_actions/calendar_actions";
 
-const AppRouter = ({isLoggedIn, userObj, refreshUser}) => {
+const AppRouter = () => {
+    const dispatch = useDispatch();
+    const {user: {user}} = useSelector((state) => state);
+    const getSchedules = () => {
+        if(user){
+            dispatch(loadSchedule(user.uid))
+        }
+    }
+    useEffect(() => {
+        getSchedules();
+    }, [user])
     return(
         <Router>
-            {isLoggedIn && 
+            {user && 
                 <nav>
                     <ul>
                         <li>
                             <Link to="/">Home</Link>
                         </li>
                         <li>
-                            <Link to="/profile">{userObj.displayName}'s Profile</Link>
+                            <Link to="/profile">{user.displayName}'s Profile</Link>
                         </li>
                     </ul>
                 </nav>  
             }
             <Switch>
-                {isLoggedIn ? 
+                {user ? 
                 <>
                     <Route exact path="/">
-                        <Home userObj={userObj} />
+                        <Home />
                     </Route>
                     <Route exact path="/profile">
-                        <Profile userObj={userObj} refreshUser={refreshUser} />
+                        <Profile />
                     </Route>
                 </> :
                     <Route exact path="/">

@@ -14,35 +14,36 @@ export const prevMonth = (thisMonth) =>{
 export const nextMonth = (thisMonth) =>{
     return {type:NEXT_MONTH, thisMonth};
 };
-export const loadSchedule = async() => {
+export const loadSchedule = async(uid) => {
     const response = await db.get()
         .then(docs => docs)
     let data = [];
     response.forEach(doc => {
-        if(doc.exists){
+        if(doc.exists && doc.data().uid === uid){
             data = [...data, {id: doc.id, ...doc.data()}]
         }
     })
     return {type: LOAD_SCHEDULE, data}
 }
 
-export const editSchedule = (id, title, desc) =>{
-    return {type:EDIT_SCHEDULE, id, title, desc};
-};
 export const addSchedule = (data) =>{
     return {type:ADD_SCHEDULE, data};
 };
 export const delSchedule = (id) =>{
     return {type:DEL_SCHEDULE, id};
 };
-export const comSchedule = (id) =>{
-    return {type:COM_SCHEDULE, id};
+export const comSchedule = (id, completed) =>{
+    return {type:COM_SCHEDULE, id, completed};
+};
+export const editSchedule = (id, title, desc) =>{
+    return {type:EDIT_SCHEDULE, id, title, desc};
 };
 
-export const addFB = (date,title,desc) => {
+export const addFB = (uid, date,title,desc) => {
     return function(dispatch){
         let schedule = {
-            date,
+            uid,
+            date: String(date),
             desc,
             title,
             completed: false
@@ -51,5 +52,31 @@ export const addFB = (date,title,desc) => {
             schedule = {...schedule, id: docRef.id}
             dispatch(addSchedule(schedule))
         })
+    }
+}
+
+export const delFB = (id) => {
+    return async function(dispatch){
+        await fb_db.doc(`calendar/${id}`).delete();
+        dispatch(delSchedule(id))
+    }
+}
+
+export const comFB = (id, completed) => {
+    return async function(dispatch){
+        await fb_db.doc(`calendar/${id}`).update({
+            completed: !completed
+        });
+        dispatch(comSchedule(id, !completed))
+    }
+}
+
+export const editFB = (id, title, desc) => {
+    return async function(dispatch){
+        await fb_db.doc(`calendar/${id}`).update({
+            title,
+            desc
+        });
+        dispatch(editSchedule(id, title, desc))
     }
 }

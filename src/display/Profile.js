@@ -1,12 +1,17 @@
 import { fb_auth } from "firebaseConfig";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { refreshUser, updatefb } from "_actions/user_actions";
 
-const Profile = ({userObj, refreshUser}) => {
-    const [newDisplayName, setNewDisplayName] = useState(userObj.displayName);
+const Profile = () => {
+    const {user: {user}, calendar:{activeS}} = useSelector((state) => state);
+    const dispatch = useDispatch();
+    const [newDisplayName, setNewDisplayName] = useState(user.displayName);
     const history = useHistory();
     const onLogoutClick = () => {
         fb_auth.signOut();
+        dispatch(refreshUser());
         history.push("/");
     }
     const onChange = (event) => {
@@ -17,13 +22,14 @@ const Profile = ({userObj, refreshUser}) => {
     };
     const onSubmit = async (event) => {
         event.preventDefault();
-        if (userObj.displayName !== newDisplayName) {
-            await userObj.updateProfile({
-            displayName: newDisplayName,
-            });
+        if (user.displayName !== newDisplayName) {
+            dispatch(updatefb(newDisplayName));
+        } else{
+            window.alert("기존 닉네임과 같습니다")
         }
-        refreshUser();
+        // dispatch(refreshUser());
     }
+    console.log(activeS)
     return (
         <>
             <form onSubmit={onSubmit}>
@@ -36,6 +42,14 @@ const Profile = ({userObj, refreshUser}) => {
                 <input type="submit" value="Update Profile" />
             </form>
             <button onClick={onLogoutClick}>Log out</button>
+            <ul>
+                {activeS && 
+                    activeS.map(schedule => 
+                        <li key={schedule.id}>
+                            {schedule.title}
+                        </li>)
+                }
+            </ul>
         </>
     )
 }

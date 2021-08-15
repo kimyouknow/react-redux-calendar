@@ -1,3 +1,9 @@
+// user
+export const SET_USER = "setUser";
+export const REFRESH_USER = "refreshUser";
+export const UPDATE = "update";
+
+// calendar
 export const SET_TODAY = "setToday";
 export const PREV_MONTH = "prevMonth";
 export const NEXT_MONTH = "nextMonth";

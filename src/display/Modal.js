@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import styled from "styled-components";
 import { addFB } from "_actions/calendar_actions";
 
@@ -25,6 +25,7 @@ const ModalWindow = styled.div`
 `;
 
 const Modal = ({openModal, setOpenModal}) => {
+    const {user: {user}} = useSelector((state) => state);
     const dispatch = useDispatch();
     const [title, setTitle] = useState("");
     const [desc, setDesc] = useState("");
@@ -38,7 +39,7 @@ const Modal = ({openModal, setOpenModal}) => {
     const onSubmitHandler = (e) => {
         e.preventDefault();
         // console.log(activeDate)
-        dispatch(addFB(activeDate, title, desc));
+        dispatch(addFB(user.uid, activeDate, title, desc));
         setTitle("");
         setDesc("")
         setOpenModal(false);
@@ -51,7 +52,7 @@ const Modal = ({openModal, setOpenModal}) => {
         <Container show={openModal}>
             <ModalWindow>
                 <button onClick={() => setOpenModal(false)}>x</button>
-                <input type="date" onChange={(e) => onChangeHandler(e.target.value)} />
+                <input type="date" value={activeDate.toISOString().substring(0, 10)} onChange={(e) => onChangeHandler(e.target.value)} />
                 <form onSubmit={(e => onSubmitHandler(e))}>
                     <label>Add to do</label>
                     <input type="text" name="title" value={title} onChange={(e => setTitle(e.target.value))} placeholder="Title" />

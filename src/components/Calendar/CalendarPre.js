@@ -79,12 +79,16 @@ const CalendarPre = ({activeDate, dates, activeS, handleLastMonth, handleNextMon
     const {activeM,activeY} = activeDate;
     const [activeInfo, setActiveInfo] = useState(null);
     const compareDate = (input) => {
-        const inputY = String(input.getFullYear());
-        const inputM = String(input.getMonth());
-        const inputD = String(input.getDate());
+        const inputDate = new Date(input);
+        const inputY = String(inputDate.getFullYear());
+        const inputM = String(inputDate.getMonth());
+        const inputD = String(inputDate.getDate());
         return inputY+inputM+inputD
     }
-    const filterd = (date) => activeS.filter(obj => compareDate(obj.date) === compareDate(date.date))
+    const filterd = (date) => activeS.filter(obj => {
+        // console.log(obj)
+        return compareDate(obj.date) === compareDate(date.date)
+    })
     return (
         <>
         <Header>

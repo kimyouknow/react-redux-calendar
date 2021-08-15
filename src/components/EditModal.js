@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import {useDispatch} from "react-redux";
-import { comSchedule, delSchedule, editSchedule } from "_actions/calendar_actions";
+import { comFB, delFB, editFB } from "_actions/calendar_actions";
 
 const Container = styled.div`
     display: ${props => props.show ? "flex" : "none"};
@@ -41,8 +41,8 @@ const ToDoElement = styled.div`
 
 const EditModal = ({activeInfo, setActiveInfo}) => {
     const dispatch = useDispatch();
-    const {id, title, desc, date} = activeInfo;
-    const activeDate = date.toDate();
+    const {id, title, desc, date, completed} = activeInfo;
+    const activeDate = new Date(date);
     const [titleIp, setTitleIP] = useState(title);
     const [descIP, setDescIP] = useState(desc);
     const closeModal = () => {
@@ -51,13 +51,16 @@ const EditModal = ({activeInfo, setActiveInfo}) => {
     const onSubmitHandler = (id, type) => {
         switch (type) {
             case "edit":
-                dispatch(editSchedule(id, titleIp, descIP));
+                dispatch(editFB(id, titleIp, descIP));
                 break;
             case "com":
-                dispatch(comSchedule(id))
+                dispatch(comFB(id, completed))
                 break;
             case "del":
-                dispatch(delSchedule(id))
+                const ok = window.confirm("Are you sure?");
+                if(ok){
+                    dispatch(delFB(id))
+                }
                 break;
             default:
                 break;
@@ -80,7 +83,9 @@ const EditModal = ({activeInfo, setActiveInfo}) => {
                         <input type="text" name="desc" value={descIP} onChange={(e => setDescIP(e.target.value))} placeholder="Description" />
                         <ButtonContainer>
                             <ToDoElement onClick={() => onSubmitHandler(id, "edit")}>수정</ToDoElement>
-                            <ToDoElement onClick={() => onSubmitHandler(id, "com")}>완료</ToDoElement>
+                            <ToDoElement onClick={() => onSubmitHandler(id, "com")}>
+                                {completed ? "취소" : "완료"}
+                            </ToDoElement>
                             <ToDoElement onClick={() => onSubmitHandler(id, "del")}>삭제</ToDoElement>
                         </ButtonContainer>
                 </EditForm>

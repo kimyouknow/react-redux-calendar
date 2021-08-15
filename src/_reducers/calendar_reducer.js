@@ -8,8 +8,8 @@ const initState = {
 }
 
 const calendarReducer = (state = initState, action) => {
-    const found = (id) => state.schedules.find(element =>  String(element.id) === String(id));
-    const filtered = (id) => state.schedules.filter(element =>  String(element.id) !== String(id));
+    const found = (id) => state.activeS.find(element =>  String(element.id) === String(id));
+    const filtered = (id) => state.activeS.filter(element =>  String(element.id) !== String(id));
     switch (action.type){
         case CHANGE_DATE:{
             const newDate = new Date(action.date);
@@ -42,28 +42,20 @@ const calendarReducer = (state = initState, action) => {
             } return {...state,activeD: newD, activeM:newM}
         }
         case LOAD_SCHEDULE: {
-            // const server = action.data.filter(element => {
-            //     const date = element.date.toDate();
-            //     if(date.getFullYear() === state.activeY && date.getMonth() === state.activeM) {
-            //         return element
-            //     } else {
-            //         return null
-            //     }
-            // })
             return {...state, activeS: action.data}
-        }
-        case EDIT_SCHEDULE:{
-            const {id, title, desc} = action;
-            return {...state, schedules:[...filtered(id), {...found(id), title, desc}]};
         }
         case ADD_SCHEDULE:{
             return {...state, activeS:[...state.activeS, action.data]};
         }
         case DEL_SCHEDULE:{
-            return {...state, schedules:filtered};
+            return {...state, activeS:filtered(action.id)};
         }
         case COM_SCHEDULE:{
-            return {...state, schedules:[...filtered(action.id), {...found(action.id), completed: true}]};
+            return {...state, activeS:[...filtered(action.id), {...found(action.id), completed: action.completed}]};
+        }
+        case EDIT_SCHEDULE:{
+            const {id, title, desc} = action;
+            return {...state, activeS:[...filtered(id), {...found(id), title, desc}]};
         }
         default:
             return state;

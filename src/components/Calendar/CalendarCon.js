@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import CalendarPre from "./CalendarPre"
 import { useDispatch, useSelector } from 'react-redux';
-import { nextMonth, prevMonth, setToday } from "_actions/calendar_actions";
+import { loadSchedule, nextMonth, prevMonth, setToday } from "_actions/calendar_actions";
 
 const CalendarCon = () => {
     const {calendar} = useSelector((state) => state);
@@ -51,7 +51,6 @@ const CalendarCon = () => {
     useEffect(() => {
         renderingCalendar();
     }, [activeM, activeD,activeS])
-    console.log(activeS)
     return (
         <CalendarPre 
             activeDate={{activeD,activeM,activeY}}

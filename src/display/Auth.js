@@ -1,7 +1,10 @@
 import { fb_auth, fb_instance } from "firebaseConfig";
 import React, {useState} from "react";
+import { useDispatch } from "react-redux";
+import { refreshUser } from "_actions/user_actions";
 
 function Auth() {
+    const dispatch = useDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [newAccount, setNewAccount] = useState(false);
@@ -26,6 +29,7 @@ function Auth() {
         } catch (error) {
             setError(error.message);
         }
+        dispatch(refreshUser());
         setEmail("");
         setPassword("");
     }
@@ -48,6 +52,8 @@ function Auth() {
         }
         catch (error){
             console.log(error)
+        } finally{
+            dispatch(refreshUser());
         }
     }
     const toggleAccount = () => setNewAccount((prev) => !prev);
@@ -59,7 +65,7 @@ function Auth() {
                 <input type="submit" value={newAccount ? "Create Account" : "Log in"}/>
                 {error}
             </form>
-            <span onClick={toggleAccount}>{newAccount ? "login" : "create Account"}</span>
+            <button onClick={toggleAccount}>{newAccount ? "login" : "create Account"}</button>
             <div>
                 <button onClick={socialOnClick} name="google">Continue with Google</button>
                 <button onClick={socialOnClick} name="github">Continue with Github </button>
