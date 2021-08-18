@@ -15,3 +15,6 @@ export const EDIT_SCHEDULE = "editSchedule";
 export const ADD_SCHEDULE = "addSchedule";
 export const DEL_SCHEDULE = "delSchedule";
 export const COM_SCHEDULE = "comSchedule";
+
+//modal
+export const SET_MODAL = "setModal";

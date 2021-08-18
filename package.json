@@ -20,6 +20,7 @@
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.3.0",
+    "styled-reset": "^4.3.4",
     "uuid": "^8.3.2",
     "web-vitals": "^1.0.1"
   },

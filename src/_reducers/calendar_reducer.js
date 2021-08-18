@@ -1,10 +1,12 @@
-import { ADD_SCHEDULE, CHANGE_DATE, COM_SCHEDULE, DEL_SCHEDULE, EDIT_SCHEDULE, LOAD_SCHEDULE, NEXT_MONTH, PREV_MONTH, SET_TODAY } from "_actions/types";
+import { ADD_SCHEDULE, CHANGE_DATE, COM_SCHEDULE, DEL_SCHEDULE, EDIT_SCHEDULE, LOAD_SCHEDULE, NEXT_MONTH, PREV_MONTH, SET_MODAL, SET_TODAY } from "_actions/types";
 
 const initState = {
     activeD: new Date().getDate(),
     activeM: new Date().getMonth(),
     activeY: new Date().getFullYear(),
-    activeS: []
+    activeS: [],
+    addModal: false,
+    editModal: false
 }
 
 const calendarReducer = (state = initState, action) => {
@@ -56,6 +58,13 @@ const calendarReducer = (state = initState, action) => {
         case EDIT_SCHEDULE:{
             const {id, title, desc} = action;
             return {...state, activeS:[...filtered(id), {...found(id), title, desc}]};
+        }
+        case SET_MODAL:{
+            if (action.text === "edit"){
+                return {...state, editModal: !state.editModal }
+            } else{
+                return {...state, addModal: !state.addModal }
+            }
         }
         default:
             return state;

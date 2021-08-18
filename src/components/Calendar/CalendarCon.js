@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import CalendarPre from "./CalendarPre"
 import { useDispatch, useSelector } from 'react-redux';
-import { loadSchedule, nextMonth, prevMonth, setToday } from "_actions/calendar_actions";
+import { loadSchedule, nextMonth, prevMonth, setModal, setToday } from "_actions/calendar_actions";
 
 const CalendarCon = () => {
     const {calendar} = useSelector((state) => state);
@@ -48,6 +48,7 @@ const CalendarCon = () => {
     const handleLastMonth = () => dispatch(prevMonth(activeM));
     const handleNextMonth = () => dispatch(nextMonth(activeM));
     const handleToday = () => dispatch(setToday(new Date()));
+    const handleModal = (text) => dispatch(setModal(text));
     useEffect(() => {
         renderingCalendar();
     }, [activeM, activeD,activeS])
@@ -59,6 +60,7 @@ const CalendarCon = () => {
             handleLastMonth={handleLastMonth}
             handleNextMonth={handleNextMonth}
             handleToday={handleToday}
+            handleModal={handleModal}
         />
     )
 }

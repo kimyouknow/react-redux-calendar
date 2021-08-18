@@ -1,12 +1,21 @@
-import EditModal from "components/EditModal";
 import React, { useState } from "react";
 import styled from "styled-components";
-// import { MdChevronLeft, MdChevronRight, } from "react-icons/md";
+import { MdAdd } from "react-icons/md";
+import EditModal from "components/EditModal";
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
 
 const Header = styled.div`
+    font-size: 1.6rem;
     display: flex;
     justify-content:center;
-    margin-bottom: 20px;
+    padding-bottom: 20px;
+    column-gap: 20px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid;
 `;
 
 const WeekContainer =styled.div`
@@ -18,12 +27,13 @@ const WeekComponent = styled.div`
     display: flex;
     justify-content:center;
     align-items: center;
-    height: 70px;
+    height: 60px;
+    font-weight: 600;
     :nth-child(7n+1){
-        color: #d13e3e;
+        color: #ff4d4d;
     }
     :nth-child(7n){
-        color: #396ee2;
+        color: #17c0eb;
     }
 `;
 
@@ -34,6 +44,7 @@ const DisplayMonth = styled.div`
 `;
 
 const Button = styled.div`
+    color: rgba(0,0,0,0.5);
     &:hover{
         cursor: pointer;
     }
@@ -45,36 +56,66 @@ const DateContainer = styled.div`
     margin-bottom: 20px;
 `;
 
+const DateEle = styled.div`
+    padding: 6px;
+    margin-bottom: 4px;
+    color: ${props => (props.today ? "#fff" : "#000")};
+    background-color: ${props => (props.today ? "rgba(255, 107, 129,1.0)" : "none")};
+    border-radius: ${props => (props.today ? "50%" : "none")};
+`;
+
 const DateComponent = styled.div`
     display: flex;
-    justify-content:flex-start;
-    align-items: flex-start;
-    padding: 8px;
-    height: 100px;
+    flex-direction: column;
+    align-items: center;
+    height: 120px;
+    min-width: 62px;
     position: relative;
-    border: ${props => (props.today ? "3px solid red" : "none")};
     background-color: ${props => props.isCur ? "transparent": "rgba(0,0,0,0.2)"};
     :nth-child(7n+1){
-        color: #d13e3e;
+        color: #ff4d4d;
     };
     :nth-child(7n){
-        color: #396ee2;
+        color: #17c0eb;
     };
-    cursor: pointer;
 `;
 
 const ToDoContainer = styled.div`
     display: flex;
     flex-direction:column;
-    width: 100%;
-    padding-left: 10px;
-    color: black;
-    &:hover {
-        background-color: rgba(223, 230, 233,1.0);
+    width: 90%;
+    z-index: 5;
+    &:hover .overflow {
+        opacity: 1;
+        visibility: visible;
     }
 `;
 
-const CalendarPre = ({activeDate, dates, activeS, handleLastMonth, handleNextMonth, handleToday})  => {
+const ToDoElement = styled.div`
+    font-size: 0.9rem;
+    padding: 4px 0;
+    color: #fff;
+    margin-top: 4px;
+    text-align: center;
+    background-color: ${props => props.done? "rgba(255, 107, 129,1.0)": "rgba(164, 176, 190,1.0)" };
+    border-radius: 6px;
+    cursor: pointer;
+    &:hover {
+        background-color: ${props => props.done? "rgba(255, 107, 129,0.5)": "rgba(164, 176, 190,0.5)" };
+    }
+    &.overflow{
+        z-index: 10;
+        opacity: 0;
+        visibility: hidden;
+    }
+    &.more{
+        text-align: center;
+    }
+
+`;
+
+
+const CalendarPre = ({activeDate, dates, activeS, handleLastMonth, handleNextMonth, handleToday, handleModal})  => {
     const weeks = ["SUN", "MON","TUE","WED","THU","FRI","SAT"];    
     const {activeM,activeY} = activeDate;
     const [activeInfo, setActiveInfo] = useState(null);
@@ -90,7 +131,7 @@ const CalendarPre = ({activeDate, dates, activeS, handleLastMonth, handleNextMon
         return compareDate(obj.date) === compareDate(date.date)
     })
     return (
-        <>
+        <Container>
         <Header>
             <Button onClick={() => handleLastMonth()}>◀</Button>
                 <DisplayMonth onClick={()=> handleToday()}>
@@ -105,31 +146,59 @@ const CalendarPre = ({activeDate, dates, activeS, handleLastMonth, handleNextMon
             {/* {console.log(dates)} */}
             {!dates ? <h1>Loading</h1> : 
             dates.map(date =>
-                <DateComponent key={date.date} 
-                    isCur={date.isCur}
-                    today={date.date.getDate() === new Date().getDate() && date.date.getMonth() === new Date().getMonth()}
-                >
-                {date.date.getDate()}
-                <ToDoContainer>
-                    {filterd(date) ? filterd(date).map((ele, idx) => 
-                        <ToDoContainer key={idx} onClick={()=> setActiveInfo(ele)}>
-                            {ele.title}
-                        </ToDoContainer>
-                    ): null}
-                </ToDoContainer>
+                <DateComponent key={date.date} isCur={date.isCur} >
+                <DateEle today={date.date.getDate() === new Date().getDate() && date.date.getMonth() === new Date().getMonth()}>{date.date.getDate()}</DateEle>
+                {filterd(date) &&
+                    <ToDoContainer>
+                        {filterd(date).length > 3 ?
+                        <>
+                            <ToDoElement>
+                                {filterd(date)[0].title.length > 8 ? filterd(date)[0].title.substring(0,8)+"..." : filterd(date)[0].title}
+                            </ToDoElement>
+                            <ToDoElement className={"more"}>
+                                <MdAdd />
+                            </ToDoElement >
+                            {filterd(date).slice(1).map((ele, idx) => 
+                                <ToDoElement className={"overflow"} done={ele.completed} key={idx} onClick={()=> {
+                                    setActiveInfo(ele)
+                                    handleModal("edit")
+                                }}>
+                                    {ele.title.length > 8 ? ele.title.substring(0,8)+"..." : ele.title}
+                                </ToDoElement>
+                            )}
+                        </> :
+                        filterd(date).map((ele, idx) => 
+                            <ToDoElement done={ele.completed} key={idx} onClick={()=> {
+                                setActiveInfo(ele)
+                                handleModal("edit")
+                            }}>
+                                {ele.title.length > 8 ? ele.title.substring(0,8)+"..." : ele.title}
+                            </ToDoElement>
+                        )       
+                        }
+                    </ToDoContainer>
+                }
+                {/* <ToDoContainer>
+                    {filterd(date) ? 
+                    filterd(date).map((ele, idx) => 
+                        <ToDoElement done={ele.completed} key={idx} onClick={()=> {
+                            setActiveInfo(ele)
+                            handleModal("edit")
+                        }}>
+                            {ele.title.length > 8 ? ele.title.substring(0,8)+"..." : ele.title}
+                        </ToDoElement>
+                    ) : null}
+                </ToDoContainer> */}
             </DateComponent>)
         }
         </DateContainer>
         {activeInfo && <EditModal 
             activeInfo={activeInfo}
             setActiveInfo={setActiveInfo}
+            handleModal={handleModal}
         />}
-    </>
+    </Container>
     );
 }
 
 export default CalendarPre;
-
-
-// const {data:schedules} = await dispatch(loadSchedule());
-//         const i_schedule = schedules.filter((obj => compareDate(obj.date.toDate()) === compareDate(i_date)));

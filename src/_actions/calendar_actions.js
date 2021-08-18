@@ -1,5 +1,5 @@
 import { fb_db } from "firebaseConfig";
-import {CHANGE_DATE, SET_TODAY ,PREV_MONTH, NEXT_MONTH, ADD_SCHEDULE, DEL_SCHEDULE, COM_SCHEDULE, EDIT_SCHEDULE, LOAD_SCHEDULE} from "./types";
+import {SET_MODAL, CHANGE_DATE, SET_TODAY ,PREV_MONTH, NEXT_MONTH, ADD_SCHEDULE, DEL_SCHEDULE, COM_SCHEDULE, EDIT_SCHEDULE, LOAD_SCHEDULE} from "./types";
 const db = fb_db.collection("calendar");
 
 export const changeDate = (date) =>{
@@ -14,6 +14,10 @@ export const prevMonth = (thisMonth) =>{
 export const nextMonth = (thisMonth) =>{
     return {type:NEXT_MONTH, thisMonth};
 };
+export const setModal = (text) => {
+    return {type:SET_MODAL, text}
+}
+
 export const loadSchedule = async(uid) => {
     const response = await db.get()
         .then(docs => docs)
