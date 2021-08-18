@@ -59,7 +59,6 @@ const Ul = styled.ul`
     display: flex;
     width: 100%;
     flex-direction: column;
-    margin-left: 30px;
 `;
 const Li = styled.li`
     display:flex;
