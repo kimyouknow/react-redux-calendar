@@ -62,7 +62,7 @@ const Body = styled.div`
     align-items: center;
     justify-content: space-between;
     flex-direction: column;
-    padding: 10px 0 ;
+    padding: 8px;
     height: 90%;
 `;
 const Span = styled.span`

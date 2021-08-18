@@ -4,7 +4,9 @@ import { MdDehaze, MdHome, MdPerson, MdAdd } from 'react-icons/md';
 import { BrowserRouter as Router, Switch, Route, Link, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loadSchedule, setModal } from "_actions/calendar_actions";
-
+import Home from "display/Home";
+import Auth from "display/Auth";
+import Profile from "display/Profile";
 
 const Nav = styled.nav`
     font-size: 1em;
@@ -63,7 +65,6 @@ const Nav = styled.nav`
 
 const AppRouter = ({user, modal}) => {
     const dispatch = useDispatch();
-    const location = useLocation(); 
     const getSchedules = () => {
         if(user){
             dispatch(loadSchedule(user.uid))
@@ -73,18 +74,34 @@ const AppRouter = ({user, modal}) => {
         getSchedules();
     }, [user])
     return(
-        <Nav open={modal}>
-            <Link to="/">
-                <MdHome className={"subBtn HomeBtn"} />
-            </Link>
-            <Link to="/profile">
-                <MdPerson className={"subBtn ProfileBtn"} />
-            </Link>
-            {location.pathname === "/" ?
-            <MdAdd className={"subBtn addBtn"} onClick={() => dispatch(setModal("add"))} />: null
+        <Router>
+            {user && 
+                <Nav open={modal}>
+                    <Link to="/">
+                        <MdHome className={"subBtn HomeBtn"} />
+                    </Link>
+                    <Link to="/profile">
+                        <MdPerson className={"subBtn ProfileBtn"} />
+                    </Link>
+                    <MdAdd className={"subBtn addBtn"} onClick={() => dispatch(setModal("add"))} />
+                    <MdDehaze  className={"menuBtn"} />
+                </Nav> 
             }
-            <MdDehaze  className={"menuBtn"} />
-        </Nav> 
+            <Switch>
+                {user ? 
+                <>
+                    <Route exact path="/">
+                        <Home />
+                    </Route>
+                    <Route exact path="/profile">
+                        <Profile />
+                    </Route>
+                </> :
+                    <Route exact path="/">
+                        <Auth />
+                    </Route>}
+            </Switch>
+        </Router>
     )
 }
 

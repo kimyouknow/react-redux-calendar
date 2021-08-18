@@ -57,6 +57,7 @@ const Body = styled.div`
     justify-content: space-between;
     flex-direction: column;
     height: 90%;
+    padding: 8px;
 `;
 const InputD = styled.input`
     border-bottom: 1px solid #dfe4ea;
