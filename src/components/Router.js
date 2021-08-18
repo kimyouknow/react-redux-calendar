@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { MdDehaze, MdHome, MdPerson, MdAdd } from 'react-icons/md';
-import { BrowserRouter as Router, Switch, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loadSchedule, setModal } from "_actions/calendar_actions";
 import Home from "display/Home";
@@ -74,7 +74,7 @@ const AppRouter = ({user, modal}) => {
         getSchedules();
     }, [user])
     return(
-        <Router>
+        <Router basename={process.env.REACT_APP_PUBLIC_URL}>
             {user && 
                 <Nav open={modal}>
                     <Link to="/">
