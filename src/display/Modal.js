@@ -107,13 +107,22 @@ const Modal = () => {
   const dispatch = useDispatch();
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [activeDate, setActiveDate] = useState(new Date());
+  const [activeDate, setActiveDate] = useState({
+    Y: new Date().getFullYear(),
+    M: new Date().getMonth(),
+    D: new Date().getDate(),
+  });
   const onChangeHandler = (value) => {
     const Y = Number(value.slice(0, 4));
     const M = Number(value.slice(5, 7)) - 1;
     const D = Number(value.slice(8, 10));
-    setActiveDate(new Date(Y, M, D));
+    setActiveDate({
+      Y,
+      M,
+      D,
+    });
   };
+  const { Y, M, D } = activeDate;
   const onSubmitHandler = (e) => {
     e.preventDefault();
     // console.log(activeDate)
@@ -142,7 +151,7 @@ const Modal = () => {
         <Body>
           <InputD
             type="date"
-            value={activeDate.toISOString().substring(0, 10)}
+            value={new Date(Y, M, D + 1).toISOString().substring(0, 10)}
             onChange={(e) => onChangeHandler(e.target.value)}
           />
           <Form onSubmit={(e) => onSubmitHandler(e)}>

@@ -43,7 +43,7 @@ const calendarReducer = (state = initState, action) => {
       let newM = state.activeM - 1;
       let newY = state.activeY;
       let newD = new Date(newY, newM, 1).getDate();
-      if (state.activeM === 1) {
+      if (state.activeM === 0) {
         newM = state.activeM + 11;
         newY = state.activeY - 1;
         newD = new Date(newY, newM, 1).getDate();
