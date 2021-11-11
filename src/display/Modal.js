@@ -126,7 +126,7 @@ const Modal = () => {
   const onSubmitHandler = (e) => {
     e.preventDefault();
     // console.log(activeDate)
-    dispatch(addFB(user.uid, activeDate, title, desc));
+    dispatch(addFB(user.uid, new Date(Y, M, D), title, desc));
     setTitle("");
     setDesc("");
     setModalOpen();

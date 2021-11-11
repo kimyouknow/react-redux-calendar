@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { refreshUser, updatefb } from "_actions/user_actions";
+import { delFB } from "_actions/calendar_actions";
 
 const Container = styled.div`
   display: flex;
@@ -84,6 +85,9 @@ const LiTitle = styled.div`
   border-right: 2px solid rgba(0, 0, 0, 0.5);
 `;
 const LiDesc = styled.div``;
+const LiDel = styled.div`
+  cursor: pointer;
+`;
 
 const Profile = () => {
   const {
@@ -142,6 +146,7 @@ const Profile = () => {
           <LiDate>Date</LiDate>
           <LiTitle>Title</LiTitle>
           <LiDesc>Description</LiDesc>
+          <LiDel></LiDel>
         </Li>
         {activeS &&
           activeS.map((schedule) => (
@@ -149,6 +154,7 @@ const Profile = () => {
               {showDate(schedule.date)}
               <LiTitle>{schedule.title}</LiTitle>
               <LiDesc>{schedule.desc}</LiDesc>
+              <LiDel onClick={() => dispatch(delFB(schedule.id))}>❌</LiDel>
             </Li>
           ))}
       </Ul>
